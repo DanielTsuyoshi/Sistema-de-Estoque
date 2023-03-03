@@ -21,8 +21,8 @@
 | campo | tipo | obrigatório | descrição
 |-------|------|:-----------:|----------
 |nomeItem|texto|sim|nome dado ao item/produto que deseja inserir
-|quantidadeId|decimal Positivo|sim|quantidade total que o usuário tem do item/produto
-|categoriaId|texto|sim|o id de uma categoria previamente cadastrada
+|quantidadeId|inteiro|sim|quantidade total que o usuário tem do item/produto
+|categoriaId|inteiro|sim|o id de uma categoria previamente cadastrada
 |marca|texto|sim|marca do o item/produto que será cadastrado 
 |descricao|texto|sim|um texto sobre o produto
 
@@ -107,8 +107,8 @@
 |-------|------|:-----------:|----------
 |nome|texto|sim|nome do usuário 
 |email|texto|sim|email do usuário
-|telefone|decimal 12numeros|sim|número do usuário com ddd
-|cpf|decimal 11numeos|sim|cpf do usuário
+|telefone|texto|sim|número do usuário com ddd
+|cpf|texto|sim|cpf do usuário
 |senha|texto|sim|senha do usuário
 |confirmacao Senha|texto|sim|mesma senha do campo acima para confirmacao 
 
@@ -119,7 +119,7 @@
 {
     nome: 'João da Silva',
     email: 'joão@gmail.com',
-    telefone: 1199999-9999,
+    telefone: 119999999-99,
     cpf: 999.999.999-99,
     senha: 'joao@123',
     cofirmacaoSenha: 'joao@123',
@@ -144,7 +144,7 @@
 {
     nome: 'João da Silva',
     email: 'joão@gmail.com',
-    telefone: 1199999-9999,
+    telefone: 11999999999,
     cpf: 999.999.999-99,
     senha: 'joao@123',
     confirmacaoSenha: 'joao@123',
