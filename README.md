@@ -71,7 +71,7 @@
 | código | descrição
 |--------|----------
 |200| os dados foram retornados
-|404| campos inválidos
+|404| não foi encontrado item com esse nome
 
 ...
 ### Pesquisar Item
@@ -96,7 +96,7 @@
 | código | descrição
 |--------|----------
 |200| os dados foram retornados
-|404| campos inválidos
+|400| campos inválidos
 
 ...
 ### Cadastrar Usuário
@@ -156,7 +156,7 @@
 | código | descrição
 |--------|----------
 |200| os dados foram retornados
-|404| campos inválidos
+|404| não foi encontrado o usuário com esse nome
 
 ### Login 
 
@@ -203,5 +203,5 @@
 | código | descrição
 |--------|----------
 |200| login bem sucedido
-|404| campos inválidos
+|400| campos inválidos
 
