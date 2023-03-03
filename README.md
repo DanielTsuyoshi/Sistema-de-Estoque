@@ -21,8 +21,8 @@
 | campo | tipo | obrigatório | descrição
 |-------|------|:-----------:|----------
 |nomeItem|texto|sim|nome dado ao item/produto que deseja inserir
-|quatidadeId|decimal Positivo|sim|quantidade total que o usuário tem do item/produto
-|cateoriaId|texto|sim|o id de uma categoria previamente cadastrada
+|quantidadeId|decimal Positivo|sim|quantidade total que o usuário tem do item/produto
+|categoriaId|texto|sim|o id de uma categoria previamente cadastrada
 |marca|texto|sim|marca do o item/produto que será cadastrado 
 |descricao|texto|sim|um texto sobre o produto
 
@@ -33,7 +33,7 @@
 ```json
 {
     nomeItem: 'Mouse',
-    quatidadeId: 8,
+    quantidadeId: 8,
     categoriaId: 'eletronico',
     valor: 148.99;
     marca: 'hyperX',
@@ -53,12 +53,12 @@
 
 `GET` /sistemaDeEstoque/api/item
 
-*Eemplo de resposta*
+*Exemplo de resposta*
 
 ```json
 {
     nomeItem: 'Mouse',
-    quatidadeId: 8,
+    quantidadeId: 8,
     categoriaId: 'eletronico',
     valor: 148.99;
     marca: 'hyperX',
@@ -78,12 +78,12 @@
 
 `GET` /sistemaDeEstoque/api/item/{id}
 
-*Eemplo de resposta*
+*Exemplo de resposta*
 
 ```json
 {
     nomeItem: 'Mouse',
-    quatidadeId: 8,
+    quantidadeId: 8,
     categoriaId: 'eletronico',
     valor: 148.99;
     marca: 'hyperX',
@@ -138,7 +138,7 @@
 
 `GET` /sistemaDeEstoque/api/usuário/{id}
 
-*Eemplo de resposta*
+*Exemplo de resposta*
 
 ```json
 {
@@ -147,7 +147,7 @@
     telefone: 1199999-9999,
     cpf: 999.999.999-99,
     senha: 'joao@123',
-    cofirmacaoSenha: 'joao@123',
+    confirmacaoSenha: 'joao@123',
 }
 ```
 
@@ -189,7 +189,7 @@
 
 `GET` /sistemaDeEstoque/api/login/{id}
 
-*Eemplo de resposta*
+*Exemplo de resposta*
 
 ```json
 {
