@@ -23,6 +23,7 @@
 |nomeItem|texto|sim|nome dado ao item/produto que deseja inserir
 |quantidadeId|inteiro|sim|quantidade total que o usuário tem do item/produto
 |categoriaId|inteiro|sim|o id de uma categoria previamente cadastrada
+|valor|decimal|sim|o valor do produto
 |marca|texto|sim|marca do o item/produto que será cadastrado 
 |descricao|texto|sim|um texto sobre o produto
 
