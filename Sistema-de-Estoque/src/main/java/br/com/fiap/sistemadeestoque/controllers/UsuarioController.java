@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,74 +14,68 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.fiap.sistemadeestoque.models.Usuario;
-
+import br.com.fiap.sistemadeestoque.repository.UsuarioRepository;
 
 @RestController
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
 
     Logger log = LoggerFactory.getLogger(UsuarioController.class);
 
-    private List<Usuario> usuarios = new ArrayList<>();
+    List<Usuario> usuarios = new ArrayList<>();
+
+    @Autowired
+    UsuarioRepository repository;
     
-    @GetMapping("/api/usuarios")
+    @GetMapping
     public List<Usuario> index(){
-        return usuarios;
+        return repository.findAll();
     }
 
-    @PostMapping("/api/usuario")
+    @PostMapping
     public ResponseEntity<Usuario> create(@RequestBody Usuario usuario){
         log.info("Cadastrar Usuario: " + usuario);
-        usuario.setId(usuarios.size() + 1l);
-        usuarios.add(usuario);
-
+        repository.save(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
     }
 
-    @GetMapping("/api/usuario/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Usuario> show(@PathVariable Long id){
-        log.info("Buscar usuario " + id);
-        var usuarioEncontrado = usuarios
-            .stream()
-            .filter(d -> d.getId().equals(id))
-            .findFirst();
-        if(usuarioEncontrado.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        log.info("Buscar Usuario " + id);
+        var usuarioEncontrado = repository.findById(id);
+
+        if(usuarioEncontrado.isEmpty()) return ResponseEntity.notFound().build();
+        
             return ResponseEntity.ok(usuarioEncontrado.get());
         
     }
 
-    @DeleteMapping("/api/usuario/{id}")
-    public ResponseEntity<Usuario> delete(@PathVariable Long id){
-        var usuarioEncontrado = usuarios
-            .stream()
-            .filter(d -> d.getId().equals(id))
-            .findFirst();
-        if(usuarioEncontrado.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    @DeleteMapping("{id}")
+    public ResponseEntity<Usuario> destroy(@PathVariable Long id){
+        log.info("Apagando Usuario " + id);
+        var usuarioEncontrado = repository.findById(id);
 
-        usuarios.remove(usuarioEncontrado.get());
-        return ResponseEntity.noContent().build();
+        if(usuarioEncontrado.isEmpty()) return ResponseEntity.noContent().build();
+            
+        repository.delete(usuarioEncontrado.get());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @PutMapping("/api/usuario/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody Usuario usuario){
-        var usuarioEncontrado = usuarios
-            .stream()
-            .filter(d -> d.getId().equals(id))
-            .findFirst();
-            
-        if(usuarioEncontrado.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        log.info("Atualizando Usuario " + id);
+        var usuarioEncontrado = repository.findById(id);
 
-        usuarios.remove(usuarioEncontrado.get());
+        if(usuarioEncontrado.isEmpty()) return ResponseEntity.noContent().build();
+
         usuario.setId(id);
-        usuarios.add(usuario);
+        repository.save(usuario);
+
         return ResponseEntity.ok(usuario);
     }
 

@@ -1,13 +1,24 @@
 package br.com.fiap.sistemadeestoque.models;
 
-public class Usuario {
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+@Entity
+public class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String email;
     private String telefone;
     private String cpf;
     private String senha;
+
+    protected Usuario(){
+        
+    }
     
     public Usuario(String nome, String email, String telefone, String cpf, String senha) {
         this.nome = nome;
