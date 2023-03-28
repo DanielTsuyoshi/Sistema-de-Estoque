@@ -6,8 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,9 +18,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.sistemadeestoque.models.Item;
 import br.com.fiap.sistemadeestoque.repository.ItemRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/items")
@@ -37,41 +41,39 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<Item> create(@RequestBody Item item){
-        log.info("Cadastrar Item: " + item);
+    public ResponseEntity<Object> create(@RequestBody @Valid Item item){
+        log.info("cadastrando items " + item);
+
         repository.save(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(item);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Item> show(@PathVariable Long id){
+    public ResponseEntity<Object> show(@PathVariable Long id){
         log.info("Buscar item " + id);
-        var itemEncontrado = repository.findById(id);
-
-        if(itemEncontrado.isEmpty()) return ResponseEntity.notFound().build();
+        var itemEncontrado = repository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item não encontrado"));
         
-            return ResponseEntity.ok(itemEncontrado.get());
+        return ResponseEntity.ok(itemEncontrado);
         
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Item> destroy(@PathVariable Long id){
-        log.info("Apagando items " + id);
-        var itemEncontrado = repository.findById(id);
-
-        if(itemEncontrado.isEmpty()) return ResponseEntity.noContent().build();
+        log.info("Apagando item " + id);
+        var itemEncontrado = repository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Erro ao apagar. Item não encontrado"));
             
-        repository.delete(itemEncontrado.get());
+        repository.delete(itemEncontrado);
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Item> update(@PathVariable Long id, @RequestBody Item item){
+    public ResponseEntity<Item> update(@PathVariable Long id, @RequestBody @Valid Item item){
         log.info("Atualizando items " + id);
-        var itemEncontrado = repository.findById(id);
-
-        if(itemEncontrado.isEmpty()) return ResponseEntity.noContent().build();
+        repository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Item não encontrado"));
 
         item.setId(id);
         repository.save(item);
