@@ -120,7 +120,7 @@
 {
     nome: 'João da Silva',
     email: 'joão@gmail.com',
-    telefone: 119999999-99,
+    telefone: 1199999-9999,
     cpf: 999.999.999-99,
     senha: 'joao@123',
     cofirmacaoSenha: 'joao@123',
@@ -145,7 +145,7 @@
 {
     nome: 'João da Silva',
     email: 'joão@gmail.com',
-    telefone: 11999999999,
+    telefone: 1199999-9999,
     cpf: 999.999.999-99,
     senha: 'joao@123',
     confirmacaoSenha: 'joao@123',

@@ -1,10 +1,12 @@
 package br.com.fiap.sistemadeestoque.controllers;
 
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,9 +24,13 @@ import br.com.fiap.sistemadeestoque.models.Usuario;
 import br.com.fiap.sistemadeestoque.repository.ItemRepository;
 import br.com.fiap.sistemadeestoque.repository.UsuarioRepository;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
+
 
 @RestController
 @RequestMapping("/api/usuarios")
+@Slf4j
 public class UsuarioController {
 
     Logger log = LoggerFactory.getLogger(getClass());
@@ -35,8 +42,10 @@ public class UsuarioController {
     ItemRepository itemRepository;
     
     @GetMapping
-    public List<Usuario> index(){
-        return usuarioRepository.findAll();
+    public Page<Usuario> index(@RequestParam(required = false) String busca,@PageableDefault(size = 5) Pageable pageable){
+        if (busca == null) 
+            return usuarioRepository.findAll(pageable);     
+        return usuarioRepository.findByNomeContaining(busca, pageable);
     }
 
     @PostMapping
