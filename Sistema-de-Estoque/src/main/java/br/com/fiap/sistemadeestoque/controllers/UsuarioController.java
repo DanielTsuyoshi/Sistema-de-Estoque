@@ -1,12 +1,12 @@
 package br.com.fiap.sistemadeestoque.controllers;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,55 +33,63 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UsuarioController {
 
-    Logger log = LoggerFactory.getLogger(getClass());
-
     @Autowired
     UsuarioRepository usuarioRepository;
 
     @Autowired
     ItemRepository itemRepository;
+
+    @Autowired
+    PagedResourcesAssembler<Object> assembler;
     
     @GetMapping
-    public Page<Usuario> index(@RequestParam(required = false) String busca,@PageableDefault(size = 5) Pageable pageable){
-        if (busca == null) 
-            return usuarioRepository.findAll(pageable);     
-        return usuarioRepository.findByNomeContaining(busca, pageable);
+    public PagedModel<EntityModel<Object>> index(@RequestParam(required = false) String busca,@PageableDefault(size = 5) Pageable pageable){
+
+        Page<Usuario> usuarios = (busca == null) ?
+            usuarioRepository.findAll(pageable):
+            usuarioRepository.findByNomeContaining(busca, pageable);
+        
+        return assembler.toModel(usuarios.map(Usuario::toEntityModel));
     }
 
     @PostMapping
-    public ResponseEntity<Usuario> create(@RequestBody @Valid Usuario usuario){
+    public ResponseEntity<Object> create(@RequestBody @Valid Usuario usuario){
         log.info("cadastrando usuario " + usuario);
         usuarioRepository.save(usuario);
         usuario.setItem(itemRepository.findById(usuario.getItem().getId()).get());
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
+        return ResponseEntity
+            .created(usuario.toEntityModel().getRequiredLink("self").toUri())
+            .body(usuario.toEntityModel());
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Usuario> show(@PathVariable Long id){
+    public EntityModel<Usuario> show(@PathVariable Long id){
         log.info("Buscar usuario " + id);
-        return ResponseEntity.ok( getUsuario(id));
-        
+        var usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+
+        return usuario.toEntityModel();
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Usuario> destroy(@PathVariable Long id){
         log.info("Apagando usuario " + id);
-        usuarioRepository.delete(getUsuario(id));
+        var usuario = usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Erro ao apagar o usuário"));
+        usuarioRepository.delete(usuario);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Usuario> update(@PathVariable Long id, @RequestBody @Valid Usuario usuario){
+    public EntityModel<Usuario> update(@PathVariable Long id, @RequestBody @Valid Usuario usuario){
         log.info("Atualizando usuarios " + id);
-        getUsuario(id);
+        usuarioRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+
         usuario.setId(id);
         usuarioRepository.save(usuario);
-        return ResponseEntity.ok(usuario);
-    }
 
-    private Usuario getUsuario(Long id) {
-        return usuarioRepository.findById(id)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario não encontrado"));
+        return usuario.toEntityModel();
     }
 
 }

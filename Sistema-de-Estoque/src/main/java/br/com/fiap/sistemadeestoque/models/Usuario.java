@@ -1,5 +1,10 @@
 package br.com.fiap.sistemadeestoque.models;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+import br.com.fiap.sistemadeestoque.controllers.ItemController;
+import br.com.fiap.sistemadeestoque.controllers.UsuarioController;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Usuario {
+public class Usuario{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,5 +49,15 @@ public class Usuario {
 
     @OneToMany
     private Item item;
+
+    public EntityModel<Usuario> toEntityModel() {
+        return EntityModel.of(
+            this,
+            linkTo(methodOn(UsuarioController.class).show(id)).withSelfRel(),
+            linkTo(methodOn(UsuarioController.class).destroy(id)).withRel("delete"),
+            linkTo(methodOn(UsuarioController.class).index(null, Pageable.unpaged())).withRel("all"),
+            linkTo(methodOn(ItemController.class).show(this.getItem().getId())).withRel("item")
+        );
+    }
 
 }
