@@ -8,11 +8,16 @@
     - Apagar
     - Atualizar
     - Pesquisar
-- Usuário 
-    - [Cadastrar](#cadastrar-usuário)
+- Contas 
+    - [Cadastrar](#cadastrar-conta)
     - Apagar
     - Atualizar
     - Detalhes
+- Usuario
+    - [Cadastrar]
+    - Apagar
+    - Atualizar
+    - Detalhes 
 
 ### Cadastrar Item
 
@@ -100,18 +105,65 @@
 |400| campos inválidos
 
 ...
-### Cadastrar Usuário
+### Cadastrar Conta
 
-`POST` /sistemaDeEstoque/api/usuário
+`POST` /sistemaDeEstoque/api/conta
 
 | campo | tipo | obrigatório | descrição
 |-------|------|:-----------:|----------
-|nome|texto|sim|nome do usuário 
-|email|texto|sim|email do usuário
+|nome|texto|sim|nome da conta
 |telefone|texto|sim|número do usuário com ddd
 |cpf|texto|sim|cpf do usuário
+
+
+*Exemplo de requisição*
+
+```json
+{
+    nome: 'João da Silva',
+    telefone: 1199999-9999,
+    cpf: 999.999.999-99,
+}
+```
+
+*Resposta*
+
+| código | descrição
+|--------|----------
+|201| usuário foi cadastrado com sucesso
+|400| campos inválidos
+
+...
+### Detalhes Conta
+
+`GET` /sistemaDeEstoque/api/conta/{id}
+
+*Exemplo de resposta*
+
+```json
+{
+    nome: 'João da Silva',
+    telefone: 1199999-9999,
+    cpf: 999.999.999-99,
+}
+```
+
+*Resposta*
+
+| código | descrição
+|--------|----------
+|200| os dados foram retornados
+|404| não foi encontrado o usuário com esse nome
+...
+### Cadastrar Usuario
+
+`POST` /sistemaDeEstoque/api/usuario
+
+| campo | tipo | obrigatório | descrição
+|-------|------|:-----------:|----------
+|nome|texto|sim|nome da conta
+|email|texto|sim|email do usuário
 |senha|texto|sim|senha do usuário
-|confirmacao Senha|texto|sim|mesma senha do campo acima para confirmacao 
 
 
 *Exemplo de requisição*
@@ -120,10 +172,7 @@
 {
     nome: 'João da Silva',
     email: 'joão@gmail.com',
-    telefone: 1199999-9999,
-    cpf: 999.999.999-99,
     senha: 'joao@123',
-    cofirmacaoSenha: 'joao@123',
 }
 ```
 
@@ -137,7 +186,7 @@
 ...
 ### Detalhes Usuário
 
-`GET` /sistemaDeEstoque/api/usuário/{id}
+`GET` /sistemaDeEstoque/api/usuario/{id}
 
 *Exemplo de resposta*
 
@@ -145,10 +194,7 @@
 {
     nome: 'João da Silva',
     email: 'joão@gmail.com',
-    telefone: 1199999-9999,
-    cpf: 999.999.999-99,
     senha: 'joao@123',
-    confirmacaoSenha: 'joao@123',
 }
 ```
 
