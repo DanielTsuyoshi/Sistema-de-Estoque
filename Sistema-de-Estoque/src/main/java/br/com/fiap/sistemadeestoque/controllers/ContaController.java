@@ -1,5 +1,6 @@
 package br.com.fiap.sistemadeestoque.controllers;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,8 +44,7 @@ public class ContaController {
     PagedResourcesAssembler<Object> assembler;
     
     @GetMapping
-    public PagedModel<EntityModel<Object>> index(@RequestParam(required = false) String busca,@PageableDefault(size = 5) Pageable pageable){
-
+    public PagedModel<EntityModel<Object>> index(@RequestParam(required = false) String busca, @ParameterObject @PageableDefault(size = 5) Pageable pageable){        
         Page<Conta> contas = (busca == null) ?
             contaRepository.findAll(pageable):
             contaRepository.findByNomeContaining(busca, pageable);

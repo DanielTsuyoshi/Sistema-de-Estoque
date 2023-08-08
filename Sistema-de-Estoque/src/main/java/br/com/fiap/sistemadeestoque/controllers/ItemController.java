@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,17 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fiap.sistemadeestoque.models.Item;
 import br.com.fiap.sistemadeestoque.repository.ItemRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/items")
+@SecurityRequirement(name = "bearer-key")
+@Tag(name = "Items", description = "Items do usuário")
 public class ItemController {
 
     Logger log = LoggerFactory.getLogger(getClass());
@@ -31,12 +39,22 @@ public class ItemController {
     ItemRepository itemRepository;
 
     @GetMapping
+    @Operation(
+        summary = "Listar items", 
+        description = "Retorna todas os items cadastrados"
+    )
     public List<Item> index(){
         return itemRepository.findAll();
     }
 
     @PostMapping
-    public ResponseEntity<Item> create(@RequestBody @Valid Item item){
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Item cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Campos inválidos")
+        }
+    )
+
+    public ResponseEntity<Item> create(@RequestBody @Valid @ParameterObject Item item){
         log.info("cadastrando items " + item);
         itemRepository.save(item);
         return ResponseEntity.status(HttpStatus.CREATED).body(item);
