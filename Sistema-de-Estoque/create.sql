@@ -1,0 +1,4 @@
+create table item (id number(19,0) generated as identity, icone varchar2(255 char), nome varchar2(255 char), descricao varchar2(255 char), valor number(38,2) check (valor>=0), usuario_id number(19,0), primary key (id));
+create table conta (id number(19,0) generated as identity, nome varchar2(255 char), telefone varchar2(255 char), cpf varchar2(255 char), primary key (id));
+create table usuario (id number(19,0) generated as identity, email varchar2(255 char), nome varchar2(255 char), senha varchar2(255 char), primary key (id));
+alter table conta add constraint FKlngcgagha9t0c6n5kgqw4ut8g foreign key (item_id) references item;

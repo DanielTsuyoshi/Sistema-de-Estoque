@@ -2,16 +2,20 @@ package br.com.fiap.sistemadeestoque.config;
 
 import java.math.BigDecimal;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+
 import br.com.fiap.sistemadeestoque.models.Item;
 import br.com.fiap.sistemadeestoque.models.Conta;
 import br.com.fiap.sistemadeestoque.repository.ItemRepository;
 import br.com.fiap.sistemadeestoque.repository.ContaRepository;
 
 @Configuration
-public class DatabaseSeeder implements CommandLineRunner{
+@Profile("dev")
+public class DatabaseSeeder implements CommandLineRunner {
 
     @Autowired
     ItemRepository itemRepository;
